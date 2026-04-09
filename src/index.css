@@ -1,0 +1,379 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --font-main: 'Inter', sans-serif;
+  --bg-color: #f0f2f5;
+  --text-dark: #1e293b;
+  --text-muted: #64748b;
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --primary-color: #4f46e5;
+  --primary-light: #e0e7ff;
+  --primary-hover: #4338ca;
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  /* subtle dynamic background gradient */
+  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+}
+
+.app-container {
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.app-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-dark);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.calendar-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Desktop layout */
+@media (min-width: 900px) {
+  .calendar-layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .calendar-section {
+    flex: 2;
+  }
+  .notes-section {
+    flex: 1;
+    position: sticky;
+    top: 2rem;
+  }
+}
+
+/* Glassmorphism base for both panels */
+.calendar-card, .notes-container {
+  background: var(--card-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+}
+
+.calendar-card:hover, .notes-container:hover {
+  box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.12);
+}
+
+/* ---- Calendar Component ---- */
+.calendar-hero {
+  width: 100%;
+  height: 250px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+@media (min-width: 900px) {
+  .calendar-hero {
+    height: 300px;
+  }
+}
+
+.calendar-hero-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6));
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2rem;
+  color: white;
+}
+
+.calendar-hero-overlay h2 {
+  font-size: 3rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.calendar-hero-overlay p {
+  font-size: 1.5rem;
+  font-weight: 300;
+  opacity: 0.9;
+}
+
+.calendar-body {
+  padding: 2rem;
+  background-color: white;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.current-month {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.nav-btn {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-sm);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.nav-btn:hover {
+  background: var(--bg-color);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.calendar-grid-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+.day-name {
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  animation: fadeSlideUp 0.5s ease-out;
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.day {
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  color: var(--text-dark);
+  position: relative; /* For absolute holiday marker */
+}
+
+.day.empty {
+  visibility: hidden;
+}
+
+.day:not(.empty):hover {
+  border-color: var(--primary-light);
+  background-color: #f8fafc;
+  transform: translateY(-2px);
+}
+
+/* interactive selection states */
+.day.selected {
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.4);
+  transform: scale(1.05);
+}
+
+.day.range-start {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.day.range-end {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.day.between {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+  border-radius: 0;
+}
+
+/* Today highlight */
+.day.today:not(.selected) {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+.day.today:not(.selected)::after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  right: 15%;
+  width: 6px;
+  height: 6px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+}
+
+.holiday-marker {
+  position: absolute;
+  bottom: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  background-color: #ef4444; 
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(239, 68, 68, 0.5);
+  pointer-events: none;
+}
+
+.day.selected .holiday-marker {
+  background-color: white;
+  box-shadow: none;
+}
+
+/* Tooltip for holidays */
+.day[title]:hover::before {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ---- Notes Component ---- */
+.notes-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 400px;
+  background: white;
+}
+
+.notes-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  background-color: #fdfbfb;
+}
+
+.notes-header h3 {
+  font-size: 1.25rem;
+  color: var(--text-dark);
+}
+
+.notes-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 4px 8px;
+  background: var(--primary-light);
+  color: var(--primary-color);
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.notes-body {
+  flex-grow: 1;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.notes-textarea {
+  flex-grow: 1;
+  width: 100%;
+  border: none;
+  resize: none;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-dark);
+  outline: none;
+  background: transparent;
+}
+
+.notes-textarea::placeholder {
+  color: #cbd5e1;
+  font-style: italic;
+}
+
+/* Custom Scrollbar for Notes */
+.notes-textarea::-webkit-scrollbar {
+  width: 6px;
+}
+.notes-textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+.notes-textarea::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 10px;
+}
